@@ -1,0 +1,3 @@
+comcomtool_windows_v3.2.1 为串口调试助手
+VSPD中有虚拟串口软件
+还需要下载proteus绘制硬件图 keil5 编译C程序为hex文件 
