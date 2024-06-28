@@ -1,5 +1,24 @@
-@[toc]
+[toc]
+
 # 一个简易的报告
+
+
+
+## 0. 运行结果
+
+### 硬件原理图
+
+![硬件原理图](https://jinmajue-typora-picture-bed.oss-cn-zhangjiakou.aliyuncs.com/202406281328514.png)
+
+### 实时温度数据监控 
+
+![实时温度监控](https://jinmajue-typora-picture-bed.oss-cn-zhangjiakou.aliyuncs.com/202406281328348.png)
+
+### 历史温度数据查询 
+
+![历史温度数据](https://jinmajue-typora-picture-bed.oss-cn-zhangjiakou.aliyuncs.com/202406281328083.png)
+
+
 
 ## 1. 使用的软件
 在实现上位机和下位机的串口通信以构建恒温控制系统时，您使用了多种软件。每个软件都有其特定的用途和功能，下面是它们的简介：
@@ -598,3 +617,9 @@ void main(void) {
 - 主函数初始化串口和定时器0，并在主循环中执行PID控制、更新显示和发送温度数据。
 
 通过这段代码，单片机可以实现温度的实时监控和控制，并通过PID算法调整输出PWM信号，以实现恒温控制。此外，通过串口通信，可以接收上位机发送的设定温度值，并定时发送当前温度数据到上位机。
+
+--------------------------------
+
+## Q & A
+
+- 关于
