@@ -11,6 +11,8 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import webbrowser
 import pygame
+import pyttsx3
+import speech_recognition as sr  # 导入语音识别库
 
 class SerialCommunication:
     def __init__(self, port='COM3', baud_rate=9600):
@@ -104,9 +106,11 @@ class TemperatureControlApp:
         self.data_lock = Lock()
         self.display_data = None
         self.status_label = None
+        self.voice_recognition_active = True
         self.setup_gui()
         self.update_display()
         self.start_reading()
+        self.setup_voice_recognition()
 
     def setup_gui(self):
         self.root.title("温度控制系统")
@@ -167,6 +171,39 @@ class TemperatureControlApp:
     def close_serial(self):
         status_message = self.serial_comm.close_serial()
         self.update_status(status_message)
+
+    def setup_voice_recognition(self):
+        recognizer = sr.Recognizer()
+        microphone = sr.Microphone()
+        engine = pyttsx3.init()
+
+        def recognize_speech():
+            with microphone as source:
+                recognizer.adjust_for_ambient_noise(source)
+                while self.voice_recognition_active:
+                    print("Listening for commands...")
+                    audio = recognizer.listen(source)
+                    try:
+                        command = recognizer.recognize_google(audio, language="zh-CN")
+                        print(f"Recognized command: {command}")
+                        engine.say(f"收到指令: {command}")
+                        engine.runAndWait()
+
+                        if "设定温度" in command:
+                            temp_value = float(command.split("设定温度")[1].strip().replace("度", ""))
+                            self.set_temp_entry.delete(0, tk.END)
+                            self.set_temp_entry.insert(0, temp_value)
+                            self.send_set_temp()
+
+                    except sr.UnknownValueError:
+                        print("Could not understand the audio.")
+                    except sr.RequestError as e:
+                        print(f"Could not request results; {e}")
+
+        speech_thread = Thread(target=recognize_speech)
+        speech_thread.daemon = True
+        speech_thread.start()
+
 
     def send_set_temp(self):
         try:
